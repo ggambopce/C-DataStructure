@@ -2,19 +2,20 @@
 // 배열 기반 큐 구현
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <stdio.h>  // 표준 입출력 함수를 사용하기 위한 헤더파일 (printf, scanf)
+#include <stdlib.h> // 일반적인 유틸리티 함수 (예: exit함수) 사용을 위한 헤더파일
 
-#define MAX 10
+#define MAX 10 // 큐의 최대 크기를 상수로 정의. 전처리기 지시문으로 컴파일 전에 치환됨
 
-typedef struct
+// 큐 자료구조 정의
+typedef struct // 구조체
 {
-    int items[MAX];
-    int front;
-    int rear;
-} Queue;
+    int items[MAX]; // 큐 데이터를 저장할 정수형 배열
+    int front;      // 큐의 앞쪽 인덱스를 가리키는 변수
+    int rear;       // 큐의 뒤쪽 인덱스를 가리키는 변수
+} Queue;            // 구조체의 이름은 Queue이며 나중에 변수 선언시 Queue타입으로 사용 가능
 
-// 함수 프로토타입
+// 함수 프로토타입 (함수를 미리 선언해두어 main 함수에서 사용할 수 있도록 함)
 void initializeQueue(Queue *q);
 int isEmpty(Queue *q);
 int isFull(Queue *q);
@@ -22,51 +23,52 @@ void enqueue(Queue *q, int value);
 int dequeue(Queue *q);
 void printQueue(Queue *q);
 
-// 메인 함수: 메뉴
+// 메인 함수: 메뉴 프로그램 진입점
 int main()
 {
-    Queue q;
-    int choice, value;
+    Queue q;           // Queue 구조체 변수 선언 (큐 하나 생성)
+    int choice, value; // 메뉴 선택 값과 삽입할 정수 값 저자용 변수 선언
 
-    initializeQueue(&q);
+    initializeQueue(&q); // 큐 초기화 함수 호출. 포인터를 사용하여 주소를 전달
 
-    while (1)
+    while (1) // 무한루프. 사용자가 0을 선택할 때까지 계속 반복
     {
+        // 사용자 메뉴 출력
         printf("\n===== Queue Menu =====\n");
         printf("1. Enqueue (삽입)\n");
         printf("2. Dequeue (삭제)\n");
         printf("3. Print Queue\n");
         printf("0. Exit\n");
         printf("Select> ");
-        scanf("%d", &choice);
+        scanf("%d", &choice); // 삽입할 값을 입력받아 choice 변수에 저장
 
         switch (choice)
         {
         case 1:
             printf("Enter value to enqueue: ");
-            scanf("%d", &value);
-            enqueue(&q, value);
+            scanf("%d", &value); // 삽입할 값을 입력받아 value에 저장
+            enqueue(&q, value);  // 큐에 삽입
             break;
         case 2:
-            value = dequeue(&q);
-            if (value != -1)
+            value = dequeue(&q); // 큐에서 값을 삭제하고 반환
+            if (value != -1)     // -1은 실패(빈 큐)를 의미
             {
                 printf("Dequeued value: %d\n", value);
             }
             break;
         case 3:
-            printQueue(&q);
+            printQueue(&q); // 큐의 내용을 출력
             break;
         case 0:
             printf("Bye!\n");
-            exit(0);
+            exit(0); // 프로그램 종료. <stdlib.h>의 함수
         default:
-            printf("Invalid choice.\n");
+            printf("Invalid choice.\n"); // 잘못된 선택에 대한 처리
             break;
         }
     }
 
-    return 0;
+    return 0; // 관례적으로 main함수는 int형을 반환
 }
 
 ////////////////////////////////////////////////////////////////////////////////
