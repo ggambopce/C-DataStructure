@@ -16,3 +16,4 @@ Queue 큐
 | 힙(Heap)   | 동적 메모리 할당 영역 (`malloc`, `free`) | `Queue *q = malloc(...)`로 동적 큐 만들 때 |
 | 데이터 영역    | 전역/정적 변수 저장                     | `static Queue q;` 또는 전역 선언 시        |
 
+ 자바와 비교
