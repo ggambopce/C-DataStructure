@@ -8,7 +8,8 @@
 #define MAX 10 // 큐의 최대 크기를 상수로 정의. 전처리기 지시문으로 컴파일 전에 치환됨
 
 /**
- * 큐는 선입선출(FIFO: First In, First Out) 방식의 자료구조이며, 여기에서는 배열 기반으로 구현되었기 때문에 items[MAX]라는 고정 크기의 배열을 사용한다.
+ * 큐는 선입선출(FIFO: First In, First Out) 방식의 자료구조이며,
+ * 여기에서는 배열 기반으로 구현되었기 때문에 items[MAX]라는 고정 크기의 배열을 사용한다.
  */
 typedef struct // 구조체
 {
@@ -28,8 +29,8 @@ void printQueue(Queue *q);
 // 메인 함수: 메뉴 프로그램 진입점
 int main()
 {
-    Queue q;           // Queue 구조체 변수 선언 (큐 하나 생성)
-    int choice, value; // 메뉴 선택 값과 삽입할 정수 값 저자용 변수 선언
+    Queue q;           // Queue 구조체 변수 선언 (큐 하나 생성), 이 때 스택메모리 영역에 생성된다.
+    int choice, value; // 메뉴 선택 값과 삽입할 정수 값 저장용 변수 선언
 
     initializeQueue(&q); // 큐 초기화 함수 호출. 포인터를 사용하여 주소를 전달
 
