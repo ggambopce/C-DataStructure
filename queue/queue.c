@@ -176,3 +176,49 @@ void printQueue(Queue *q)
     }
     printf("\n");
 }
+
+/*
+Step 0: 초기 상태
+Items:  [_, _, _, _, _, _, _, _, _, _]
+Index:   0  1  2  3  4  5  6  7  8  9
+Front:  -1
+Rear:   -1
+
+Step 1: enqueue(10)
+Items:  [10, _, _, _, _, _, _, _, _, _]
+Index:    0   1   2 ...
+Front:    ↑
+Rear:     ↑
+
+Step 2: enqueue(20)
+Items:  [10, 20, _, _, _, _, _, _, _, _]
+Index:    0   1
+Front:    ↑
+Rear:         ↑
+
+Step 3: enqueue(30)
+Items:  [10, 20, 30, _, _, _, _, _, _, _]
+Index:    0   1   2
+Front:    ↑
+Rear:             ↑
+
+Step 4: dequeue() → 10 반환
+Items:  [10, 20, 30, _, _, _, _, _, _, _]
+Index:    0   1   2
+Front:        ↑
+Rear:             ↑
+
+Step 5: dequeue() → 20 반환
+Items:  [10, 20, 30, _, _, _, _, _, _, _]
+Index:    0   1   2
+Front:            ↑
+Rear:             ↑
+
+Step 6: dequeue() → 30 반환 후 초기화
+Items:  [10, 20, 30, _, _, _, _, _, _, _]
+Index:    0   1   2
+Front:   -1
+Rear:    -1
+
+
+*/
