@@ -1,46 +1,117 @@
+////////////////////////////////////////////////////////////////////////////////
+// 배열 기반 스택 구현
+////////////////////////////////////////////////////////////////////////////////
+
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX_SIZE 100
+#define MAX 10
 
 typedef struct
 {
-    int data[MAX_SIZE];
+    int items[MAX];
     int top;
 } Stack;
 
-void initStack(Stack *stack)
-{
-    stack->top = -1;
-}
+// 함수 프로토타입
+void initializeStack(Stack *s);
+int isEmpty(Stack *s);
+int isFull(Stack *s);
+void push(Stack *s, int value);
+int pop(Stack *s);
+void printStack(Stack *s);
 
-int isStackEmpty(Stack *stack)
+// 메인 함수: 메뉴
+int main()
 {
-    return stack->top == -1;
-}
+    Stack s;
+    int choice, value;
 
-void push(Stack *stack, int value)
-{
-    if (stack->top < MAX_SIZE - 1)
+    initializeStack(&s);
+
+    while (1)
     {
-        stack->data[++stack->top] = value;
+        printf("\n===== Stack Menu =====\n");
+        printf("1. Push (삽입)\n");
+        printf("2. Pop (삭제)\n");
+        printf("3. Print Stack\n");
+        printf("0. Exit\n");
+        printf("Select> ");
+        scanf("%d", &choice);
+
+        switch (choice)
+        {
+        case 1:
+            printf("Enter value to push: ");
+            scanf("%d", &value);
+            push(&s, value);
+            break;
+        case 2:
+            value = pop(&s);
+            if (value != -1)
+            {
+                printf("Popped value: %d\n", value);
+            }
+            break;
+        case 3:
+            printStack(&s);
+            break;
+        case 0:
+            printf("Bye!\n");
+            exit(0);
+        default:
+            printf("Invalid choice.\n");
+            break;
+        }
     }
+
+    return 0;
 }
 
-int pop(Stack *stack)
+////////////////////////////////////////////////////////////////////////////////
+// 스택 초기화
+void initializeStack(Stack *s)
 {
-    if (!isStackEmpty(stack))
-    {
-        return stack->data[stack->top--];
-    }
-    return -1; // Stack underflow
+    s->top = -1;
 }
 
-int peek(Stack *stack)
+////////////////////////////////////////////////////////////////////////////////
+// 스택이 비었는지 확인
+int isEmpty(Stack *s)
 {
-    if (!isStackEmpty(stack))
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// 스택이 꽉 찼는지 확인
+int isFull(Stack *s)
+{
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// 삽입
+void push(Stack *s, int value)
+{
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// 삭제
+int pop(Stack *s)
+{
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// 스택 출력
+void printStack(Stack *s)
+{
+    if (isEmpty(s))
     {
-        return stack->data[stack->top];
+        printf("Stack is empty.\n");
+        return;
     }
-    return -1;
+    printf("Stack contents: ");
+    for (int i = 0; i <= s->top; i++)
+    {
+        printf("%d ", s->items[i]);
+    }
+    printf("\n");
 }
