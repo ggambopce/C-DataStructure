@@ -22,14 +22,14 @@
  */
 typedef struct Node
 {
-    int data;
-    struct Node *next;
+    int data;          // 노드에 저장되는 실제 값
+    struct Node *next; // 다음 노드를 가리키는 포인터
 } Node;
 
 // 링크드 리스트 구조체 정의 (헤드 포인터)
 typedef struct
 {
-    Node *head;
+    Node *head; // 리스트의 시작 노드를 가리키는 포인터 정의 (NULL이면 빈 리스트)
 } LinkedList;
 
 // --- 함수 프로토타입 ---
@@ -128,7 +128,7 @@ int main()
 // --- 함수 구현 ---
 
 ////////////////////////////////////////////////////////////////////////////////
-// 리스트 초기화
+// 리스트 초기화 : head가 NULL이면 빈리스트로 초기화
 void initializeList(LinkedList *list)
 {
     list->head = NULL;
@@ -141,6 +141,10 @@ void insert(LinkedList *list, int data)
     // TODO: 새 노드를 동적으로 할당하고, 입력받은 데이터로 초기화합니다.
     //       그 다음, 새 노드가 리스트의 첫 번째 노드(head)를 가리키게 하고,
     //       리스트의 head를 새 노드로 변경합니다.
+    Node *newNode = (Node *)malloc(sizeof(Node)); // 새노드 동적 메모리 할당
+    newNode->data = data;
+    newNode->next = list->head; // 새 노드가 기존의 head를 가리킴
+    list->head = newNode;       // head가 새 노드를 가리키게 함
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -151,6 +155,22 @@ void removeNode(LinkedList *list, int data)
     //       삭제할 노드가 head인 경우, head를 다음 노드로 변경합니다.
     //       그렇지 않은 경우, 이전 노드가 삭제할 노드의 다음 노드를 가리키게 합니다.
     //       마지막으로, 삭제된 노드의 메모리를 해제합니다.
+    Node *current = list->head;
+    Node *previous = NULL;
+
+    while (current != NULL)
+    {
+        if (current->data == data)
+        {
+            list->head = current->next;
+        }
+        else
+        {
+            previous->next = current->next;
+        }
+        free(current);
+        current = current->next;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -159,6 +179,15 @@ Node *search(LinkedList *list, int data)
 {
     // TODO: head부터 시작하여 리스트를 순회하며 data와 일치하는 노드를 찾습니다.
     //       찾으면 해당 노드의 포인터를 반환하고, 찾지 못하면 NULL을 반환합니다.
+    Node *current = list->head;
+    while (current != NULL)
+    {
+        if (current->data == data)
+        {
+            return current;
+        }
+        current = current->next;
+    }
     return NULL;
 }
 
