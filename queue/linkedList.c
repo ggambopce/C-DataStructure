@@ -136,14 +136,22 @@ void initializeList(LinkedList *list)
 
 ////////////////////////////////////////////////////////////////////////////////
 // 노드 삽입 (가장 앞에 삽입)
+/**
+ * 현재 head에는 첫번째 노드의 포인터가 들어있다.
+ * 새 노드에 첫번째 노드의 포인터를 넣어주고 head에는 새로운 노드를 가리키도록 한다.
+ */
 void insert(LinkedList *list, int data)
 {
     // TODO: 새 노드를 동적으로 할당하고, 입력받은 데이터로 초기화합니다.
     //       그 다음, 새 노드가 리스트의 첫 번째 노드(head)를 가리키게 하고,
     //       리스트의 head를 새 노드로 변경합니다.
-    Node *newNode = (Node *)malloc(sizeof(Node)); // 새노드 동적 메모리 할당
+    /**
+     *  malloc()은 힙 영역에 sizeof(Node) 바이트 만큼 메모리를 할당하고 그 메모리 첫번째 바이크의 주소값을 반환
+     *  (Node *) 포인터로 명시적 캐스팅하여 Node 타입으로 사용한다.
+     */
+    Node *newNode = (Node *)malloc(sizeof(Node)); // 새노드 동적 메모리 할당,
     newNode->data = data;
-    newNode->next = list->head; // 새 노드가 기존의 head를 가리킴
+    newNode->next = list->head; // 새 노드가 기존의 head의 포인터를 가진다.
     list->head = newNode;       // head가 새 노드를 가리키게 함
 }
 
@@ -155,21 +163,29 @@ void removeNode(LinkedList *list, int data)
     //       삭제할 노드가 head인 경우, head를 다음 노드로 변경합니다.
     //       그렇지 않은 경우, 이전 노드가 삭제할 노드의 다음 노드를 가리키게 합니다.
     //       마지막으로, 삭제된 노드의 메모리를 해제합니다.
-    Node *current = list->head;
-    Node *previous = NULL;
+    Node *current = list->head; // 현재 탐색 중인 노드
+    Node *previous = NULL;      // 바로 이전 노드를 저장
 
-    while (current != NULL)
+    while (current != NULL) //
     {
-        if (current->data == data)
+        if (current->data == data) // 삭제할 값을 찾은 경우
         {
-            list->head = current->next;
+            if (previous == NULL) // 삭제할 노드가 첫 번째 노드(head)인 경우
+            {
+                list->head = current->next; // head를 다음 노드로 갱신
+            }
+            else // 중간 또는 마지막 노드를 삭제할 경우
+            {
+                previous->next = current->next; // 이전 노드가 다음 노드를 가리키도록 연결 변경
+            }
+
+            free(current); // 현재 노드 메모리 해제
+
+            return; // 첫 번째로 일치하는 노드만 삭제하고 종료 (여러 개 삭제하려면 continue)
         }
-        else
-        {
-            previous->next = current->next;
-        }
-        free(current);
-        current = current->next;
+
+        previous = current;      // 현재 노드를 이전 노드로 저장
+        current = current->next; // 다음 노드로 이동
     }
 }
 
