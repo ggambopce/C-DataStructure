@@ -260,26 +260,59 @@ void printList(LinkedList *list)
 {
     // TODO: 임시 포인터를 head에서 시작하여 리스트의 끝(NULL)까지 이동시키면서
     //       각 노드의 데이터를 출력합니다. 리스트가 비어있다면 "List is empty."를 출력합니다.
+    Node *current = list->head;
+
     if (list->head == NULL)
     {
         printf("List is empty.\n");
+    }
+
+    while (current != NULL)
+    {
+        printf("[%d] -> ", current->data);
+        current = current->next;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // 리스트의 총 노드 개수 반환
+/**
+ * 노드의 현재 포인터에 head를 넣고
+ * 반복문마다 다음 포인터를 넣으면서 count 1씩 증가
+ * next가 NULL인 경우 count 반환
+ */
 int getCount(LinkedList *list)
 {
     // TODO: head부터 시작하여 리스트를 순회하며 노드의 개수를 셉니다.
     //       총 개수를 반환합니다.
-    return 0;
+    int count = 0;
+    Node *current = list->head;
+    while (current != NULL)
+    {
+        count++;
+        current = current->next;
+    }
+    return count;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // 리스트 전체 메모리 해제
+/**
+ * 반복문으로 노드를 돌면서
+ * 현재 노드 주소를 임시저장한뒤 메모리해제
+ * head도 NULL로 초기화
+ */
 void freeList(LinkedList *list)
 {
     // TODO: 임시 포인터를 사용하여 head부터 시작하여 각 노드를 순회하며
     //       동적으로 할당된 메모리를 순서대로 해제(free)합니다.
     //       모든 노드가 해제된 후, head를 NULL로 설정합니다.
+    Node *current = list->head;
+    while (current != NULL)
+    {
+        Node *temp = current;
+        current = current->next;
+        free(temp);
+    }
+    list->head = NULL;
 }
