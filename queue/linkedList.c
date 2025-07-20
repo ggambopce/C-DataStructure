@@ -214,6 +214,17 @@ void reverse(LinkedList *list)
     // TODO: 세 개의 포인터(previous, current, next)를 사용합니다.
     //       current 노드의 next가 previous를 가리키도록 변경하는 작업을
     //       리스트의 끝까지 반복합니다. 마지막에 head를 이전의 마지막 노드로 변경합니다.
+    Node *prev = NULL;
+    Node *current = list->head;
+    Node *next = NULL;
+
+    while (current != NULL)
+    {
+        next = current->next;
+        prev = current;
+        current = next;
+    }
+    list->head = prev;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -225,6 +236,16 @@ void sort(LinkedList *list)
     //       2. split() 함수를 사용해 리스트를 두 개의 하위 리스트로 분할합니다.
     //       3. 각 하위 리스트에 대해 재귀적으로 sort()를 호출합니다.
     //       4. merge() 함수를 사용해 정렬된 두 하위 리스트를 다시 하나로 병합합니다.
+
+    if (list->head == NULL || list->head->next == NULL)
+        return; // 노드 0개 또는 1개면 정렬 불필요
+
+    LinkedList front;
+    LinkedList back;
+    split(list, &front, &back); // 리스트를 두 개로 분할
+
+    list->head = NULL;          // 결과 리스트 초기화
+    merge(list, &front, &back); // 병합
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -234,6 +255,24 @@ void insert_sort(LinkedList *list, int data)
     // TODO: 새 노드를 생성합니다.
     //       리스트를 순회하며 새 노드가 들어갈 올바른 위치(정렬 순서에 맞는 위치)를 찾습니다.
     //       찾은 위치에 새 노드를 삽입합니다.
+    Node *newNode = (Node *)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->next = NULL;
+
+    if (list->head == NULL || list->head->data >= data)
+    {
+        newNode->next = list->head;
+        list->head = newNode;
+        return;
+    }
+
+    Node *current = list->head;
+    while (current->next != NULL && current->next->data < data)
+    {
+        current = current->next;
+    }
+    newNode->next = current->next;
+    current->next = newNode;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -243,6 +282,22 @@ void split(LinkedList *source, LinkedList *front, LinkedList *back)
     // TODO: "느린 포인터"와 "빠른 포인터" 기법을 사용합니다.
     //       빠른 포인터가 리스트의 끝에 도달할 때, 느린 포인터는 리스트의 중앙에 위치하게 됩니다.
     //       중앙을 기준으로 리스트를 두 부분으로 나눕니다.
+    Node *slow = source->head;
+    Node *fast = source->head->next;
+
+    while (fast != NULL)
+    {
+        fast = fast->next;
+        if (fast != NULL)
+        {
+            slow = slow->next;
+            fast = fast->next;
+        }
+    }
+
+    front->head = source->head;
+    back->head = slow->next;
+    slow->next = NULL; // 중간에서 끊기
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -252,6 +307,30 @@ void merge(LinkedList *result, LinkedList *front, LinkedList *back)
     // TODO: front와 back 리스트의 노드를 하나씩 비교하면서
     //       더 작은 값을 가진 노드를 result 리스트에 추가하는 작업을 반복합니다.
     //       한쪽 리스트가 모두 소진되면, 남은 리스트의 노드들을 모두 result에 붙입니다.
+    Node dummy; // 임시 더미 노드 (결과 리스트의 시작점 역할)
+    Node *tail = &dummy;
+    dummy.next = NULL;
+
+    Node *a = front->head;
+    Node *b = back->head;
+
+    while (a != NULL && b != NULL)
+    {
+        if (a->data <= b->data)
+        {
+            tail->next = a;
+            a = a->next;
+        }
+        else
+        {
+            tail->next = b;
+            b = b->next;
+        }
+        tail = tail->next;
+    }
+
+    tail->next = (a != NULL) ? a : b;
+    result->head = dummy.next;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
