@@ -191,44 +191,60 @@ void removeNode(LinkedList *list, int data)
 
 ////////////////////////////////////////////////////////////////////////////////
 // 특정 값을 가진 노드 검색
+/**
+ * 현재 노드를 만들고 head 주소를 넣고 순회 시작
+ * next를 순회하면서 data와 일치하는 값을 찾으면
+ * 현재 주소를 반환
+ */
 Node *search(LinkedList *list, int data)
 {
     // TODO: head부터 시작하여 리스트를 순회하며 data와 일치하는 노드를 찾습니다.
     //       찾으면 해당 노드의 포인터를 반환하고, 찾지 못하면 NULL을 반환합니다.
     Node *current = list->head;
-    while (current != NULL)
+    while (current != NULL) // NULL이면 리스트의 끝에 도달
     {
         if (current->data == data)
         {
-            return current;
+            return current; // 찾은 노드의 위치 반환
         }
         current = current->next;
     }
-    return NULL;
+    return NULL; // 없으면 NULL 반환
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // 리스트의 노드 순서를 뒤집기
+/**
+ * 현재 가리키고 있는 노드의 next에 이전 노드의 위치를 넣어주기 위해서
+ * prev에 현재 위치를 저장하고 next로 넘어간다음
+ * 넘어간 노드의 next에 prev를 저장
+ */
 void reverse(LinkedList *list)
 {
     // TODO: 세 개의 포인터(previous, current, next)를 사용합니다.
     //       current 노드의 next가 previous를 가리키도록 변경하는 작업을
     //       리스트의 끝까지 반복합니다. 마지막에 head를 이전의 마지막 노드로 변경합니다.
-    Node *prev = NULL;
+    Node *prev = NULL; // 현재 바라보고 있는 노드가 앞으로 바라봐야할 이전노드 위치를 저장할 포인터
     Node *current = list->head;
-    Node *next = NULL;
+    Node *next = NULL; // 다음으로가서 바꿔줘야할 노드 위치를 저장할 포인터
 
     while (current != NULL)
     {
-        next = current->next;
-        prev = current;
-        current = next;
+        next = current->next; // 다음 노드위치를 미리 저장
+        current->next = prev; // 연결 방향을 반대로 설정
+        prev = current;       // 이전 노드를 현재노드로 변경
+        current = next;       // 다음 노드로 이동
     }
-    list->head = prev;
+    list->head = prev; // 마지막 노드의 주소를 head로 설정
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // 리스트 정렬 (병합 정렬 추천)
+/**
+ *  인덱스가 없어서 임의 접근이 불가능하다.
+ *  재귀적 호출을 통해서 단일 노드까지 분할 한뒤
+ *  값을 비교하여 병합한다.
+ */
 void sort(LinkedList *list)
 {
     // TODO: 재귀적인 접근 방식을 사용합니다.
@@ -244,7 +260,12 @@ void sort(LinkedList *list)
     LinkedList back;
     split(list, &front, &back); // 리스트를 두 개로 분할
 
-    list->head = NULL;          // 결과 리스트 초기화
+    list->head = NULL; // 결과 리스트 초기화
+
+    // 재귀적으로 나눈 리스트들을 정렬
+    sort(&front);
+    sort(&back);
+
     merge(list, &front, &back); // 병합
 }
 
@@ -277,6 +298,12 @@ void insert_sort(LinkedList *list, int data)
 
 ////////////////////////////////////////////////////////////////////////////////
 // 리스트를 두 개의 하위 리스트로 분할 (병합 정렬용)
+/**
+ * 한번에 한칸씩이동하는 slow 포인터와 두칸씩 이동하는 fast 포인터를 사용하여
+ * fast가 끝에 도달하면 slow가 중앙에 위치할 때
+ * front에는 head의 주소를 넣고 back에는 slow의 주소를 대입
+ * slow의 next에 NULL을 넣어서 분할
+ */
 void split(LinkedList *source, LinkedList *front, LinkedList *back)
 {
     // TODO: "느린 포인터"와 "빠른 포인터" 기법을 사용합니다.
@@ -287,7 +314,7 @@ void split(LinkedList *source, LinkedList *front, LinkedList *back)
 
     while (fast != NULL)
     {
-        fast = fast->next;
+        fast = fast->next; // fast가 먼저 이동
         if (fast != NULL)
         {
             slow = slow->next;
@@ -302,13 +329,16 @@ void split(LinkedList *source, LinkedList *front, LinkedList *back)
 
 ////////////////////////////////////////////////////////////////////////////////
 // 정렬된 두 리스트를 하나의 정렬된 리스트로 병합
+/**
+ * 임시 리스트를 만들어서 비교후 연결
+ */
 void merge(LinkedList *result, LinkedList *front, LinkedList *back)
 {
     // TODO: front와 back 리스트의 노드를 하나씩 비교하면서
     //       더 작은 값을 가진 노드를 result 리스트에 추가하는 작업을 반복합니다.
     //       한쪽 리스트가 모두 소진되면, 남은 리스트의 노드들을 모두 result에 붙입니다.
-    Node dummy; // 임시 더미 노드 (결과 리스트의 시작점 역할)
-    Node *tail = &dummy;
+    Node dummy;          // 임시 더미 노드 (결과 리스트의 시작점 역할)
+    Node *tail = &dummy; // 결과 리스트의 마지막 노드포인터
     dummy.next = NULL;
 
     Node *a = front->head;
@@ -318,8 +348,8 @@ void merge(LinkedList *result, LinkedList *front, LinkedList *back)
     {
         if (a->data <= b->data)
         {
-            tail->next = a;
-            a = a->next;
+            tail->next = a; // 결과리스트에 해당 주소 저장
+            a = a->next;    // 다음 이동
         }
         else
         {
@@ -329,27 +359,30 @@ void merge(LinkedList *result, LinkedList *front, LinkedList *back)
         tail = tail->next;
     }
 
-    tail->next = (a != NULL) ? a : b;
-    result->head = dummy.next;
+    tail->next = (a != NULL) ? a : b; // 남는 노드를 뒤에 붙임
+    result->head = dummy.next;        // 최종 병합된 리스트 시작점
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // 리스트의 모든 노드 데이터 출력
+/**
+ * 현재 노드에 head부터 next주소를 순회하면서 NULL이 나올때까지 데이터 출력
+ */
 void printList(LinkedList *list)
 {
     // TODO: 임시 포인터를 head에서 시작하여 리스트의 끝(NULL)까지 이동시키면서
     //       각 노드의 데이터를 출력합니다. 리스트가 비어있다면 "List is empty."를 출력합니다.
     Node *current = list->head;
 
-    if (list->head == NULL)
+    if (list->head == NULL) // NULL 아무것도 출력하지 않고 종료
     {
         printf("List is empty.\n");
     }
 
     while (current != NULL)
     {
-        printf("[%d] -> ", current->data);
-        current = current->next;
+        printf("[%d] -> ", current->data); // 현재가리키고 있는 주소의 data를 출력
+        current = current->next;           // 현재가리키고 있는 next를 포인터에 대입하여 다음 노드 가리키도록 이동
     }
 }
 
@@ -377,6 +410,8 @@ int getCount(LinkedList *list)
 ////////////////////////////////////////////////////////////////////////////////
 // 리스트 전체 메모리 해제
 /**
+ * current를 바로 해제하면 다음 노드에 접근하기 어렵기 때문에
+ * temp변수에 포인터를 담아서 얕은 복사후 메모리 해제
  * 반복문으로 노드를 돌면서
  * 현재 노드 주소를 임시저장한뒤 메모리해제
  * head도 NULL로 초기화
@@ -389,9 +424,9 @@ void freeList(LinkedList *list)
     Node *current = list->head;
     while (current != NULL)
     {
-        Node *temp = current;
-        current = current->next;
-        free(temp);
+        Node *temp = current;    // 순회하면서 temp에 해제할 위치를 가리킴
+        current = current->next; // 다음위치로 이동
+        free(temp);              // temp
     }
     list->head = NULL;
 }
