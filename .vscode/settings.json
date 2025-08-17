@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "*.dbclient-js": "javascript",
+        "*.erd": "json",
+        "*.vuerd": "json",
+        "stdio.h": "c",
+        "__locale": "c",
+        "print": "c",
+        "ostream": "c"
+    }
+}
